@@ -1,6 +1,7 @@
 # Stage 1: Build the Scala application using sbt
 # We use an official sbt image which contains the necessary tools (sbt, jdk).
-FROM sbtscala/scala-sbt:eclipse-temurin-jammy-11.0.17_8_1.9.3_2.13.11 as builder
+# The image tag should match the Scala version in build.sbt (2.12.18).
+FROM sbtscala/scala-sbt:eclipse-temurin-jammy-11.0.17_8_1.9.3_2.12.18 as builder
 
 WORKDIR /app
 

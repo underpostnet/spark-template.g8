@@ -24,6 +24,10 @@ spec:
   # Example: "docker.io/yourusername/scala-spark-hello:latest"
   image: "localhost/spark-scala:latest"
 
+  # Explicitly set the pull policy. For local development with Kind,
+  # 'IfNotPresent' is crucial to ensure it uses the image loaded via 'kind load'.
+  imagePullPolicy: "IfNotPresent"
+
   # Restart policy for the Spark driver pod.
   restartPolicy:
     type: OnFailure
