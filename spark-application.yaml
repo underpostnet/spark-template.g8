@@ -1,0 +1,52 @@
+# This manifest defines a SparkApplication resource for the Kubernetes Operator.
+apiVersion: "sparkoperator.k8s.io/v1beta2"
+kind: SparkApplication
+metadata:
+  # The name of your application instance in Kubernetes.
+  name: scala-spark-hello-world
+  # The namespace where the Spark Operator is running.
+  namespace: default
+spec:
+  # The type of application (Scala, Python, R, or Java).
+  type: Scala
+  # The mode can be 'cluster' or 'client'. 'cluster' is standard for production.
+  mode: cluster
+  # The Spark version. MUST match the version in the Docker image and build.sbt.
+  sparkVersion: "3.5.1"
+  # The main class that serves as the entry point for your application.
+  mainClass: com.example.spark.HelloWorld
+  # The location of your application JAR inside the Docker container.
+  # The "local://" scheme refers to the local filesystem within the container.
+  mainApplicationFile: "local:///opt/spark/work-dir/scala-underpost-project-assembly-0.1.0-SNAPSHOT.jar"
+
+  # IMPORTANT: Replace this with the actual name of your Docker image after
+  # building and pushing it to a registry (like Docker Hub, GCR, ECR, etc.).
+  # Example: "docker.io/yourusername/scala-spark-hello:latest"
+  image: "your-docker-repo/scala-underpost-project:latest"
+
+  # Restart policy for the Spark driver pod.
+  restartPolicy:
+    type: OnFailure
+    onFailureRetries: 3
+    onFailureRetryInterval: 10
+    onSubmissionFailureRetries: 5
+    onSubmissionFailureRetryInterval: 20
+
+  # Configuration for the Spark driver pod.
+  driver:
+    cores: 1
+    memory: "1024m" # e.g., 1 gigabyte
+    labels:
+      version: 3.5.1
+    # A service account with permissions to create and manage executor pods is required.
+    # Create one with 'kubectl create serviceaccount spark' and bind roles to it.
+    serviceAccount: spark
+
+  # Configuration for the Spark executor pods.
+  executor:
+    instances: 2 # Number of executor pods to run.
+    cores: 1
+    memory: "1024m"
+    labels:
+      version: 3.5.1
+
