@@ -27,10 +27,11 @@ RUN sbt assembly
 # dependencies in build.sbt and the base image tag.
 FROM apache/spark:3.5.3-scala2.12-java17-python3-r-ubuntu
 
-# The Spark operator runs applications from this directory by default.
-WORKDIR /opt/spark/work-dir
+# WORKDIR to /opt/spark/jars to match the yaml.
+WORKDIR /opt/spark/jars
 
 # Copy the assembled JAR from the builder stage into the final image.
+# The JAR will now be at /opt/spark/jars/spark-scala.jar
 COPY --from=builder /app/target/scala-2.12/spark-scala.jar .
 
 # The image is now ready. The Spark operator will invoke `spark-submit`

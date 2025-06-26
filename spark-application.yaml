@@ -17,7 +17,7 @@ spec:
   mainClass: com.example.spark.HelloWorld
   # The location of your application JAR inside the Docker container.
   # The "local://" scheme refers to the local filesystem within the container.
-  mainApplicationFile: "local:///opt/spark/work-dir/spark-scala.jar"
+  mainApplicationFile: "local:///opt/spark/jars/spark-scala.jar"
 
   # IMPORTANT: Replace this with the actual name of your Docker image after
   # building and pushing it to a registry (like Docker Hub, GCR, ECR, etc.).
@@ -43,7 +43,6 @@ spec:
     labels:
       version: 3.5.3
     # A service account with permissions to create and manage executor pods is required.
-    # Create one with 'kubectl create serviceaccount spark' and bind roles to it.
     serviceAccount: spark
 
   # Configuration for the Spark executor pods.
