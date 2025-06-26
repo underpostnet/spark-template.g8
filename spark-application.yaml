@@ -16,17 +16,20 @@ spec:
   # The main class that serves as the entry point for your application.
   mainClass: com.example.spark.HelloWorld
   # The location of your application JAR inside the Docker container.
-  # The "local://" scheme refers to the local filesystem within the container.
+  # When running in a container, often just the JAR name is sufficient if it's
+  # in a standard classpath location. The 'local://' scheme is crucial
+  # to tell Spark the file is already in the image.
   mainApplicationFile: "local:///opt/spark/jars/spark-scala.jar"
 
   # IMPORTANT: Replace this with the actual name of your Docker image after
   # building and pushing it to a registry (like Docker Hub, GCR, ECR, etc.).
-  # Example: "docker.io/yourusername/scala-spark-hello:latest"
-  image: "localhost/spark-scala:latest"
+  image: "localhost/spark-scala:latest" # Using the image name directly
 
-  # Explicitly set the pull policy. For local development with Kind,
-  # 'IfNotPresent' is crucial to ensure it uses the image loaded via 'kind load'.
-  imagePullPolicy: "IfNotPresent"
+  # Explicitly set the pull policy to 'Never'.
+  # This is crucial for local Kind development to ensure Kubernetes does not
+  # attempt to pull the image from a remote registry and instead uses the
+  # image already loaded into the Kind cluster.
+  imagePullPolicy: "Never"
 
   # Restart policy for the Spark driver pod.
   restartPolicy:
