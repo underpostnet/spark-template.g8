@@ -1,6 +1,6 @@
-PROJECT_DIR=/home/dd/spark-scala
+PROJECT_DIR=/home/dd/spark-template
 PROJECT_VERSION=latest
-IMAGE_NAME=spark-scala
+IMAGE_NAME=spark-template
 
 IMAGE_NAME_FULL="${IMAGE_NAME}:${PROJECT_VERSION}"
 

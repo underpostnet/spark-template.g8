@@ -10,7 +10,7 @@ val sparkVersion = "3.5.3"
 
 lazy val root = (project in file("."))
   .settings(
-    name := "spark-scala",
+    name := "spark-template",
     version := "0.1.0-SNAPSHOT",
     scalaVersion := scalaVersionUsed,
     organization := "com.example",
@@ -27,7 +27,7 @@ lazy val root = (project in file("."))
     // sbt-assembly settings to create a runnable JAR
     assembly / mainClass := Some("com.example.spark.HelloWorld"),
     // Use a static JAR name to make the build process more robust.
-    assembly / assemblyJarName := "spark-scala.jar",
+    assembly / assemblyJarName := "spark-template.jar",
     assembly / assemblyMergeStrategy := {
       case PathList("META-INF", xs @ _*) => MergeStrategy.discard
       case x => MergeStrategy.first

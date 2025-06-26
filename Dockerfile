@@ -30,7 +30,7 @@ FROM apache/spark:3.5.3-scala2.12-java17-python3-r-ubuntu
 # The base image's WORKDIR is /opt/spark/work-dir, which is suitable.
 # We copy our application JAR into /opt/spark/jars, which is on the
 # default classpath for Spark.
-COPY --from=builder /app/target/scala-2.12/spark-scala.jar /opt/spark/jars/
+COPY --from=builder /app/target/scala-2.12/spark-template.jar /opt/spark/jars/
 
 # The image is now ready. The Spark operator will invoke `spark-submit`
 # with this image and point it to the JAR file inside.
