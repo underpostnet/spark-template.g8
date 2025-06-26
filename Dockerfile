@@ -22,9 +22,8 @@ RUN sbt assembly
 
 # Stage 2: Create the final runtime image
 # We use an official Apache Spark image as the base.
-# The version (3.5.3) and Scala version (2.12) MUST match the dependencies in build.sbt.
-# Note: Spark 3.x is typically built with Scala 2.12 or 2.13. Even though we use Scala 3
-# to compile, the Spark libraries are for 2.13, which is compatible.
+# The Spark version (3.5.3) and Scala version (2.12) MUST match the
+# dependencies in build.sbt and the base image tag.
 FROM apache/spark:3.5.3-scala2.12-java17-python3-r-ubuntu
 
 # The Spark operator runs applications from this directory by default.
