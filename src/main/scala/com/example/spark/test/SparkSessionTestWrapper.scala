@@ -1,4 +1,4 @@
-package com.example.spark.testutil
+package com.example.spark.test
 
 import org.apache.spark.sql.SparkSession
 

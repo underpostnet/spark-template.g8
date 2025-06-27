@@ -1,7 +1,7 @@
 package com.example.spark
 
 import com.example.spark.app.HelloWorld
-import com.example.spark.testutil.SparkSessionTestWrapper
+import com.example.spark.test.SparkSessionTestWrapper
 import com.github.mrpowers.spark.fast.tests.DataFrameComparer
 import org.apache.spark.sql.{Row, SparkSession}
 import org.apache.spark.sql.types.{StringType, StructField, StructType}

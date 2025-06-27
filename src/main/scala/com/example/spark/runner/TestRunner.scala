@@ -18,16 +18,13 @@ object TestRunner {
     println("===          RUNNING SPARK TESTS          ===")
     println("=============================================")
 
-    // Discover and run all ScalaTest suites.
+    // Explicitly specify the test suite to run using the '-s' flag.
     // The '-o' flag prints results to standard out.
-    // By default, ScalaTest Runner discovers tests from the classpath.
-    // Since spark-submit places the application JAR on the driver's classpath,
-    // we will explicitly specify the test suite to run using the '-s' flag.
-    // This bypasses the discovery mechanism and directly attempts to load and run the suite.
-    // If this works, it confirms the suite is correctly packaged and loadable,
-    // indicating the issue is specifically with ScalaTest's discovery process
-    // in the Spark Kubernetes environment.
-    val testResult = Runner.run(Array("-o", "-s", "com.example.spark.HelloWorldSpec"))
+    // This bypasses ScalaTest's discovery mechanism (`-R` flag), which can be
+    // unreliable in complex classloader environments like a Spark driver.
+    // By directly naming the test class, we ensure it's loaded and run.
+    // The fully qualified name must match the test's package and class name.
+    val testResult = Runner.run(Array("-o", "-s", "com.example.spark.app.HelloWorldSpec"))
 
     println("=============================================")
     println("===        SPARK TESTS COMPLETED          ===")
