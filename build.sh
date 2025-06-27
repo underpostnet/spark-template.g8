@@ -16,8 +16,8 @@ underpost dockerfile-image-build --path ${PROJECT_DIR} --image-name=${IMAGE_NAME
 
 # Apply the RBAC rules first to create the service account and its permissions.
 # This must be done before the SparkApplication is created.
-kubectl apply -f ./spark-rbac.yaml
+kubectl apply -f ./manifests/sparkapplication/spark-rbac.yaml
 
-kubectl apply -f ./spark-application.yaml
-kubectl apply -f ./spark-test-runner-application.yaml
+kubectl apply -f ./manifests/sparkapplication/spark-application.yaml
+kubectl apply -f ./manifests/sparkapplication/spark-test-runner-application.yaml
 kubectl get pods -w -o wide
