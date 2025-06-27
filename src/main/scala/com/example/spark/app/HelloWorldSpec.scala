@@ -1,4 +1,4 @@
-package com.example.spark
+package com.example.spark.app
 
 import com.example.spark.app.HelloWorld
 import com.example.spark.test.SparkSessionTestWrapper
