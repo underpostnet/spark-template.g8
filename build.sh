@@ -19,4 +19,5 @@ underpost dockerfile-image-build --path ${PROJECT_DIR} --image-name=${IMAGE_NAME
 kubectl apply -f ./spark-rbac.yaml
 
 kubectl apply -f ./spark-application.yaml
+kubectl apply -f ./spark-test-runner-application.yaml
 kubectl get pods -w -o wide

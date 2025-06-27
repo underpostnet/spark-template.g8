@@ -17,6 +17,9 @@ RUN sbt update
 # Now copy the source code
 COPY src ./src
 
+# Run tests as part of the build process to ensure code quality.
+RUN sbt test
+
 # Build the project and create the "fat" JAR file.
 RUN sbt assembly
 

@@ -1,14 +1,25 @@
 package com.example.spark
 
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object HelloWorld {
+
+  /**
+   * Creates a DataFrame with a single "Hello, World!" message.
+   * This logic is extracted to be testable.
+   * @param spark The SparkSession.
+   * @return A DataFrame with one column "message" and one row "Hello, World!".
+   */
+  def createGreetingDF(spark: SparkSession): DataFrame = {
+    import spark.implicits._
+    Seq("Hello, World!").toDF("message")
+  }
+
   def main(args: Array[String]): Unit = {
     val spark = SparkSession.builder
       .appName("HelloWorld")
       .getOrCreate()
-    import spark.implicits._
-    Seq("Hello, World!").toDF("message").show(false)
+    createGreetingDF(spark).show(false)
     spark.stop()
   }
 }
