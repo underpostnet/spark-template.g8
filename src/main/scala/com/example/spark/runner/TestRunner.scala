@@ -1,4 +1,4 @@
-package com.example.spark
+package com.example.spark.runner
 
 import org.apache.spark.sql.SparkSession
 import org.scalatest.tools.Runner

@@ -32,7 +32,7 @@ lazy val root = (project in file("."))
     ),
 
     // sbt-assembly settings to create a runnable JAR
-    assembly / mainClass := Some("com.example.spark.TestRunner"),
+    assembly / mainClass := Some("com.example.spark.runner.TestRunner"),
     // Use a static JAR name to make the build process more robust.
     assembly / assemblyJarName := "spark-template.jar",
     // Include test classes in the assembly JAR to allow running tests on the cluster.

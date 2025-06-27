@@ -15,7 +15,7 @@ spec:
   # The Spark version. MUST match the version in the Docker image and build.sbt.
   sparkVersion: "3.5.3"
   # The main class that serves as the entry point for your test runner.
-  mainClass: com.example.spark.TestRunner
+  mainClass: com.example.spark.runner.TestRunner
   # The location of your application JAR inside the Docker container.
   # The 'local://' scheme is crucial to tell Spark the file is already in the image.
   mainApplicationFile: "local:///opt/spark/jars/spark-template.jar"
