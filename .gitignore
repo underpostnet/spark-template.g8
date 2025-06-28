@@ -2,15 +2,7 @@
 .bloop
 .metals
 .vscode
-project/project/.bloop
-project/project/project
-project/project/project/target
-project/project/target
-project/target
-project/project/metals.sbt
-project/metals.sbt
-project/build.properties
-src/main/g8/project/build.properties
 target
+logs
 *.log
 *.tar
