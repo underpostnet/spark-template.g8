@@ -4,22 +4,27 @@ import com.example.spark.test.SparkSessionTestWrapper
 import com.github.mrpowers.spark.fast.tests.DataFrameComparer
 import org.apache.spark.sql.{Row, SparkSession}
 import org.apache.spark.sql.types.{IntegerType, StructField, StructType}
-import org.scalatest.BeforeAndAfterAll
+// Removed BeforeAndAfterAll as SparkSession lifecycle is managed by TestRunner
+// import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funspec.AnyFunSpec
 
 class GpuTestSpec
     extends AnyFunSpec
     with DataFrameComparer
-    with SparkSessionTestWrapper
-    with BeforeAndAfterAll {
+    with SparkSessionTestWrapper { // Removed BeforeAndAfterAll
 
-  // Ensure SparkSession is stopped after all tests in this suite.
+  // The 'spark' instance is provided by SparkSessionTestWrapper.
+  // The SparkSession lifecycle (start/stop) is now managed by TestRunner,
+  // so there's no need for individual test suites to stop it.
+  // The original afterAll method has been removed to prevent premature SparkSession stops.
+  /*
   override def afterAll(): Unit = {
     if (spark != null) {
       spark.stop()
     }
     super.afterAll() // Call super.afterAll() if you have other cleanup
   }
+   */
 
   describe("processDataWithUDF") {
     it("should correctly apply the UDF and produce expected output") {
