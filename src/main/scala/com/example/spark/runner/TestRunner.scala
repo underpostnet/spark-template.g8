@@ -24,7 +24,15 @@ object TestRunner {
     // unreliable in complex classloader environments like a Spark driver.
     // By directly naming the test class, we ensure it's loaded and run.
     // The fully qualified name must match the test's package and class name.
-    val testResult = Runner.run(Array("-o", "-s", "com.example.spark.app.HelloWorldSpec"))
+    val testResult = Runner.run(
+      Array(
+        "-o",
+        "-s",
+        "com.example.spark.app.HelloWorldSpec", // Existing test suite
+        "-s",
+        "com.example.spark.app.GpuTestSpec" // New GPU test suite
+      )
+    )
 
     println("=============================================")
     println("===        SPARK TESTS COMPLETED          ===")

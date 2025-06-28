@@ -53,3 +53,25 @@ spec:
     labels:
       version: 3.5.3
       app-role: test-executor
+    # Node affinity to schedule executors on nodes with GPU capabilities,
+    # based on NFD labels.
+    nodeSelector:
+      "nvidia.com/gpu.present": "true" # A common label applied by NVIDIA GPU operator/NFD
+
+  # Add Spark configuration properties to request GPU resources.
+  # The Spark Operator translates these properties into Kubernetes resource requests.
+  sparkConf:
+    # Driver GPU configuration
+    spark.kubernetes.driver.resource.gpu.vendor: "nvidia.com"
+    spark.kubernetes.driver.resource.gpu.amount: "1"
+    # Executor GPU configuration
+    spark.kubernetes.executor.resource.gpu.vendor: "nvidia.com"
+    spark.kubernetes.executor.resource.gpu.amount: "1"
+    # Enable the RAPIDS Accelerator plugin
+    spark.plugins: "com.nvidia.spark.SQLPlugin"
+    # Enable SQL query acceleration by RAPIDS
+    spark.rapids.sql.enabled: "true"
+    # Optional: Log detailed RAPIDS explanations for debugging and verification
+    spark.rapids.sql.explain: "true"
+    # Optional: For more verbose logging of RAPIDS activity
+    spark.rapids.sql.logLevel: "INFO" # or DEBUG

@@ -15,6 +15,9 @@ lazy val root = (project in file("."))
     scalaVersion := scalaVersionUsed,
     organization := "com.example",
 
+    // Define resolvers (repositories) for dependencies. Maven Central is standard.
+    resolvers += "Maven Central" at "https://repo1.maven.org/maven2/",
+
     // Add Spark dependencies. They are marked as "provided" because
     // the Spark runtime environment (in the Docker container) will
     // already have these libraries. This keeps our application JAR small.
@@ -28,7 +31,12 @@ lazy val root = (project in file("."))
       // TestRunner to execute the tests on the Spark cluster.
       // spark-fast-tests brings in scalatest as a transitive dependency.
       "com.github.mrpowers" %% "spark-fast-tests" % "3.0.1",
-      "org.scalatest" %% "scalatest" % "3.2.10"
+      "org.scalatest" %% "scalatest" % "3.2.10",
+
+      // Add RAPIDS Accelerator for Apache Spark core plugin.
+      // IMPORTANT: Ensure this version is compatible with your Spark version.
+      // "com.nvidia" is the correct group ID for the core RAPIDS artifacts.
+      "com.nvidia" %% "rapids-4-spark" % "24.04.0" // Use "rapids-4-spark" as the artifact name
     ),
 
     // sbt-assembly settings to create a runnable JAR
@@ -39,6 +47,6 @@ lazy val root = (project in file("."))
     assembly / test := true,
     assembly / assemblyMergeStrategy := {
       case PathList("META-INF", xs @ _*) => MergeStrategy.discard
-      case x => MergeStrategy.first
+      case x                             => MergeStrategy.first
     }
   )
