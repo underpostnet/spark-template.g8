@@ -36,7 +36,7 @@ lazy val root = (project in file("."))
       // Add RAPIDS Accelerator for Apache Spark core plugin.
       // IMPORTANT: Ensure this version is compatible with your Spark version.
       // "com.nvidia" is the correct group ID for the core RAPIDS artifacts.
-      "com.nvidia" %% "rapids-4-spark" % "24.04.0" // Use "rapids-4-spark" as the artifact name
+      "com.nvidia" %% "rapids-4-spark" % "25.04.0" // Updated to 25.04.0 for Spark 3.5.3 compatibility
     ),
 
     // sbt-assembly settings to create a runnable JAR
