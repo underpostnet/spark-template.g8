@@ -46,7 +46,10 @@ lazy val root = (project in file("."))
     // Include test classes in the assembly JAR to allow running tests on the cluster.
     assembly / test := true,
     assembly / assemblyMergeStrategy := {
-      case PathList("META-INF", xs @ _*) => MergeStrategy.discard
-      case x                             => MergeStrategy.first
+      case PathList("META-INF", "services", xs @ _*) =>
+        MergeStrategy.concat // Concatenate service files
+      case PathList("META-INF", xs @ _*) =>
+        MergeStrategy.discard // Discard other META-INF
+      case x => MergeStrategy.first
     }
   )
