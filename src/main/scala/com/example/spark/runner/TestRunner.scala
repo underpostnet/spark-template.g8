@@ -39,8 +39,8 @@ object TestRunner {
     val testResult = Runner.run(
       Array(
         "-o",
-        "-s",
-        "com.example.spark.app.HelloWorldSpec", // Existing test suite
+        // "-s",
+        // "com.example.spark.app.HelloWorldSpec",
         "-s",
         "com.example.spark.app.GpuTestSpec" // New GPU test suite
       )
