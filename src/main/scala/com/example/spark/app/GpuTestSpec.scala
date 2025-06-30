@@ -22,14 +22,16 @@ class GpuTestSpec
 
   describe("SqlOnGpuExample") {
     it("should correctly filter data using SQL and produce expected output") {
-      import this.spark.implicits._
+      // Assign 'this.spark' to a local val to make it a stable identifier for implicits
+      val currentSpark = this.spark
+      import currentSpark.implicits._
 
       // Create the initial DataFrame as done in GpuTest.scala
       val initialData = Seq(1, 2, 3).toDF("value")
       initialData.createOrReplaceTempView("df") // Create the temporary view
 
       // Execute the SQL query directly within the test, mirroring GpuTest's logic
-      val actualDF = spark.sql("SELECT value FROM df WHERE value <> 1")
+      val actualDF = currentSpark.sql("SELECT value FROM df WHERE value <> 1")
 
       // Define the expected schema and data for the output DataFrame
       // The query "SELECT value FROM df WHERE value <> 1" on Seq(1, 2, 3)
@@ -47,8 +49,8 @@ class GpuTestSpec
         Row(2),
         Row(3)
       )
-      val expectedDF = spark.createDataFrame(
-        spark.sparkContext.parallelize(expectedData),
+      val expectedDF = currentSpark.createDataFrame(
+        currentSpark.sparkContext.parallelize(expectedData),
         expectedSchema
       )
 

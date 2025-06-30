@@ -1,6 +1,5 @@
 package com.example.spark.app
 
-import com.example.spark.app.HelloWorld
 import com.example.spark.test.SparkSessionTestWrapper
 import com.example.spark.runner.TestRunner // Import TestRunner to access the shared SparkSession
 import com.github.mrpowers.spark.fast.tests.DataFrameComparer
@@ -23,15 +22,19 @@ class HelloWorldSpec
 
   describe("createGreetingDF") {
     it("creates a DataFrame with a 'Hello, World!' message") {
+      // Assign 'this.spark' to a local val to make it a stable identifier for implicits
+      val currentSpark = this.spark
+      import currentSpark.implicits._
+
       // Call the method under test
-      val actualDF = HelloWorld.createGreetingDF(spark)
+      val actualDF = HelloWorld.createGreetingDF(currentSpark)
 
       // Define the expected result.
       val expectedSchema =
         StructType(Seq(StructField("message", StringType, nullable = false)))
       val expectedData = Seq(Row("Hello, World!"))
-      val expectedDF = spark.createDataFrame(
-        spark.sparkContext.parallelize(expectedData),
+      val expectedDF = currentSpark.createDataFrame(
+        currentSpark.sparkContext.parallelize(expectedData),
         expectedSchema
       )
 
