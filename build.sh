@@ -20,4 +20,4 @@ kubectl apply -f ./manifests/sparkapplication/spark-rbac.yaml
 
 kubectl apply -f ./manifests/sparkapplication/spark-application.yaml
 kubectl apply -f ./manifests/sparkapplication/spark-test-runner-application.yaml
-kubectl get pods -w -o wide
+kubectl get sparkapplication -w -o wide
