@@ -52,10 +52,13 @@ spec:
 
   # Configuration for the Spark executor pods.
   executor:
-    instances: 1 # Only 1 executor is needed for this simple test.
     cores: 1
     coreLimit: "1000m"
-    memory: "1024m"
+    instances: 1
+    memory: "2G"
+    gpu:
+      name: "nvidia.com/gpu"
+      quantity: 1
     labels:
       version: 3.5.3
       app-role: test-executor
@@ -70,6 +73,8 @@ spec:
     spark.plugins: "com.nvidia.spark.SQLPlugin"
     spark.rapids.sql.enabled: "true"
     spark.rapids.force.caller.classloader: "false" # Added new RAPIDS config
+    spark.executor.resource.gpu.vendor: "nvidia.com"
+    spark.executor.resource.gpu.discoveryScript: "/opt/spark/scripts/getGpusResources.sh"
 
     # GPU allocation and discovery settings
     spark.task.resource.gpu.amount: "1"
@@ -78,7 +83,7 @@ spec:
     spark.kubernetes.driver.resource.gpu.amount: "1" # Kept for driver GPU
     spark.kubernetes.driver.resource.gpu.discoveryScript: "/opt/spark/scripts/getGpusResources.sh" # Kept for driver GPU
     spark.kubernetes.executor.resource.gpu.vendor: "nvidia.com"
-    spark.kubernetes.executor.resource.gpu.discoveryScript: "/opt/mapr/spark/spark-3.5.3/examples/src/main/scripts/getGpusResources.sh" # Updated discovery script path
+    spark.kubernetes.executor.resource.gpu.discoveryScript: "/opt/spark/scripts/getGpusResources.sh" # Updated discovery script path
     spark.rapids.shims-provider-override: "com.nvidia.spark.rapids.shims.spark355.SparkShimServiceProvider" # Added new RAPIDS shim config
 
     # Ephemeral storage configuration (these are correctly handled by Spark Operator
