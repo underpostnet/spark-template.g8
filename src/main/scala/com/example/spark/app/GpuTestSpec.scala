@@ -22,7 +22,7 @@ class GpuTestSpec
 
   describe("SqlOnGpuExample") {
     it("should correctly filter data using SQL and produce expected output") {
-      import spark.implicits._
+      import this.spark.implicits._
 
       // Create the initial DataFrame as done in GpuTest.scala
       val initialData = Seq(1, 2, 3).toDF("value")
