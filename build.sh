@@ -19,5 +19,5 @@ node ../engine/bin dockerfile-image-build --path ${PROJECT_DIR} --image-name=${I
 kubectl apply -f ./manifests/sparkapplication/spark-rbac.yaml
 
 kubectl apply -f ./manifests/sparkapplication/spark-application.yaml
-kubectl apply -f ./manifests/sparkapplication/spark-test-runner-application.yaml
+kubectl apply -f ./manifests/sparkapplication/spark-test-runner-gpu.yaml
 kubectl get sparkapplication -w -o wide
