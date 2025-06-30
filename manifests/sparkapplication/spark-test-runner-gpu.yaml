@@ -1,4 +1,5 @@
 # This manifest defines a SparkApplication resource for the Kubernetes Operator.
+# This version is configured to run the test suite on the cluster.
 apiVersion: "sparkoperator.k8s.io/v1beta2"
 kind: SparkApplication
 metadata:
@@ -16,9 +17,7 @@ spec:
   # The main class that serves as the entry point for your test runner.
   mainClass: com.example.spark.runner.TestRunner
   # The location of your application JAR inside the Docker container.
-  # When running in a container, often just the JAR name is sufficient if it's
-  # in a standard classpath location. The 'local://' scheme is crucial
-  # to tell Spark the file is already in the image.
+  # The 'local://' scheme is crucial to tell Spark the file is already in the image.
   mainApplicationFile: "local:///opt/spark/jars/spark-template.jar"
 
   # IMPORTANT: Replace this with the actual name of your Docker image after
@@ -31,13 +30,14 @@ spec:
   # image already loaded into the Kind cluster.
   imagePullPolicy: "Never"
 
-  # Restart policy for the Spark driver pod.
+  # Restart policy for the Spark driver pod. For tests, we might not want to restart.
+  # 'Never' ensures that a failed test run is reported as a failure immediately.
   restartPolicy:
-    type: OnFailure
-    onFailureRetries: 3
-    onFailureRetryInterval: 10
-    onSubmissionFailureRetries: 5
-    onSubmissionFailureRetryInterval: 20
+    type: Never
+    # onFailureRetries: 3
+    # onFailureRetryInterval: 10
+    # onSubmissionFailureRetries: 5
+    # onSubmissionFailureRetryInterval: 20
 
   # Configuration for the Spark driver pod.
   driver:
@@ -45,23 +45,34 @@ spec:
     memory: "1024m" # e.g., 1 gigabyte
     labels:
       version: 3.5.3
+      app-role: test-driver
     # A service account with permissions to create and manage executor pods is required.
     serviceAccount: spark
+    resources: # Explicitly define resources for the driver pod
+      requests:
+        ephemeral-storage: "1Gi" # Request 1Gi of ephemeral storage
+      limits:
+        ephemeral-storage: "20Gi" # Limit to 20Gi of ephemeral storage
 
   # Configuration for the Spark executor pods.
   executor:
-    instances: 3
+    instances: 1 # Only 1 executor is needed for this simple test.
     cores: 1
     memory: "1024m"
     labels:
       version: 3.5.3
+      app-role: test-executor
     # Node affinity to schedule executors on nodes with GPU capabilities,
     # based on NFD labels.
     nodeSelector:
       "nvidia.com/gpu.present": "true" # A common label applied by NVIDIA GPU operator/NFD
+    resources: # Explicitly define resources for the executor pods
+      requests:
+        ephemeral-storage: "1Gi" # Request 1Gi of ephemeral storage
+      limits:
+        ephemeral-storage: "20Gi" # Limit to 20Gi of ephemeral storage
 
-  # Add Spark configuration properties to request GPU and ephemeral storage resources.
-  # The Spark Operator translates these properties into Kubernetes resource requests.
+  # Add Spark configuration properties.
   sparkConf:
     # Driver GPU configuration
     spark.kubernetes.driver.resource.gpu.vendor: "nvidia.com"
@@ -75,16 +86,17 @@ spec:
     # Explicitly tell Spark where the GPU discovery script is located for executors.
     spark.kubernetes.executor.resource.gpu.discoveryScript: "/opt/spark/scripts/getGpusResources.sh"
 
-    # Ephemeral storage configuration
+    # Ephemeral storage configuration (kept as they are Spark-specific configs)
     spark.kubernetes.driver.request.ephemeralStorage: "1Gi"
     spark.kubernetes.driver.limit.ephemeralStorage: "20Gi"
     spark.kubernetes.executor.request.ephemeralStorage: "1Gi"
     spark.kubernetes.executor.limit.ephemeralStorage: "20Gi"
-    # Enable the RAPIDS Accelerator plugin
+
+    # RAPIDS Accelerator plugin configurations
     spark.plugins: "com.nvidia.spark.SQLPlugin"
-    # Enable SQL query acceleration by RAPIDS
     spark.rapids.sql.enabled: "true"
-    # Optional: Log detailed RAPIDS explanations for debugging and verification
     spark.rapids.sql.explain: "true"
-    # Optional: For more verbose logging of RAPIDS activity
     spark.rapids.sql.logLevel: "INFO" # or DEBUG
+
+  Spark Version: "3.5.3"
+  Type: Scala
