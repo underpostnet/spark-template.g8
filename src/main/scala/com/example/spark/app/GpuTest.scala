@@ -1,49 +1,30 @@
-package com.example.spark.app
+package com.example.spark.app // Reverted package name to original
 
-import org.apache.spark.sql.{DataFrame, SparkSession}
-import org.apache.spark.sql.functions._ // Import for UDFs
+import org.apache.spark.sql.SparkSession
 
-object GpuTest {
-
-  /** Defines a simple UDF that performs a calculation. In a true
-    * GPU-accelerated Spark environment (e.g., with Spark-Rapids), certain UDFs
-    * can be offloaded to the GPU. This is a placeholder for such logic. For
-    * demonstration, we'll simply multiply by 2.
-    *
-    * @param spark
-    *   The SparkSession.
-    * @return
-    *   A DataFrame with a 'value' column and an 'output' column after UDF
-    *   application.
-    */
-  def processDataWithUDF(spark: SparkSession): DataFrame = {
-    import spark.implicits._
-
-    // Sample data
-    val data = Seq(1, 2, 3, 4, 5).toDF("value")
-
-    // Define a UDF. For actual GPU acceleration with Spark, this would
-    // typically involve a catalyst expression that Spark-Rapids can optimize
-    // or a custom GPU-aware UDF. This is a simple example.
-    val multiplyByTwoUDF = udf((value: Int) => value * 2)
-
-    // Apply the UDF
-    val resultDF = data.withColumn("output", multiplyByTwoUDF(col("value")))
-
-    resultDF
-  }
+object GpuTest { // Renamed object back to GpuTest
 
   def main(args: Array[String]): Unit = {
-    val spark = SparkSession.builder
-      .appName("GpuTestApp")
+    val spark = SparkSession
+      .builder()
+      .appName("GpuTestApp") // Added appName for clarity
       .getOrCreate()
+    val sc = spark.sparkContext
+
+    import spark.implicits._
+
+    val viewName = "df"
+    val df = sc.parallelize(Seq(1, 2, 3)).toDF("value")
+    df.createOrReplaceTempView(viewName)
 
     println("=============================================")
     println("===          RUNNING GPU TEST APP         ===")
     println("=============================================")
 
-    val result = processDataWithUDF(spark)
-    result.show()
+    // Execute a SQL query and explain the plan (to see GPU optimizations)
+    spark.sql(s"SELECT value FROM $viewName WHERE value <>1").explain()
+    // Show the results of the SQL query
+    spark.sql(s"SELECT value FROM $viewName WHERE value <>1").show()
 
     println("=============================================")
     println("===        GPU TEST APP COMPLETED         ===")

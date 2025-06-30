@@ -26,9 +26,9 @@ RUN sbt assembly
 
 # Stage 2: Create the final runtime image
 # We use an official Apache Spark image as the base.
-# The Spark version (3.5.3) and Scala version (2.12) MUST match the
+# The Spark version (3.5.5) and Scala version (2.12) MUST match the
 # dependencies in build.sbt and the base image tag.
-FROM apache/spark:3.5.3-scala2.12-java17-python3-r-ubuntu
+FROM apache/spark:3.5.5-scala2.12-java17-python3-r-ubuntu
 
 # The base image's WORKDIR is /opt/spark/work-dir, which is suitable.
 # We copy our application JAR into /opt/spark/jars, which is on the

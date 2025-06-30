@@ -13,7 +13,7 @@ spec:
   # The mode can be 'cluster' or 'client'. 'cluster' is standard for production.
   mode: cluster
   # The Spark version. MUST match the version in the Docker image and build.sbt.
-  sparkVersion: "3.5.3"
+  sparkVersion: "3.5.5"
   # The main class that serves as the entry point for your test runner.
   mainClass: com.example.spark.runner.TestRunner
   # The location of your application JAR inside the Docker container.
@@ -45,7 +45,7 @@ spec:
     coreLimit: "1000m" # Added coreLimit for the driver
     memory: "1024m" # e.g., 1 gigabyte
     labels:
-      version: 3.5.3
+      version: 3.5.5
       app-role: test-driver
     # A service account with permissions to create and manage executor pods is required.
     serviceAccount: spark
@@ -55,12 +55,12 @@ spec:
     cores: 1
     coreLimit: "1000m"
     instances: 1
-    memory: "2G"
+    memory: "1G"
     gpu:
       name: "nvidia.com/gpu"
       quantity: 1
     labels:
-      version: 3.5.3
+      version: 3.5.5
       app-role: test-executor
     # Node affinity to schedule executors on nodes with GPU capabilities,
     # based on NFD labels.

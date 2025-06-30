@@ -4,9 +4,9 @@
 
 // Define project versions.
 // The Scala version should match the one Spark was built with in your Docker image.
-// The apache/spark:3.5.3 image uses Scala 2.12.
+// The apache/spark:3.5.5 image uses Scala 2.12.
 val scalaVersionUsed = "2.12.18" // A recent version of Scala 2.12
-val sparkVersion = "3.5.3"
+val sparkVersion = "3.5.5"
 
 lazy val root = (project in file("."))
   .settings(
@@ -36,7 +36,7 @@ lazy val root = (project in file("."))
       // Add RAPIDS Accelerator for Apache Spark core plugin.
       // IMPORTANT: Ensure this version is compatible with your Spark version.
       // "com.nvidia" is the correct group ID for the core RAPIDS artifacts.
-      "com.nvidia" %% "rapids-4-spark" % "25.04.0" // Updated to 25.04.0 for Spark 3.5.3 compatibility
+      "com.nvidia" %% "rapids-4-spark" % "25.04.0" // Updated to 25.04.0 for Spark 3.5.5 compatibility
     ),
 
     // sbt-assembly settings to create a runnable JAR

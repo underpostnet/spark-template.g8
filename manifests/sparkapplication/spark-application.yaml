@@ -12,7 +12,7 @@ spec:
   # The mode can be 'cluster' or 'client'. 'cluster' is standard for production.
   mode: cluster
   # The Spark version. MUST match the version in the Docker image and build.sbt.
-  sparkVersion: "3.5.3"
+  sparkVersion: "3.5.5"
   # The main class that serves as the entry point for your application.
   mainClass: com.example.spark.app.HelloWorld
   # The location of your application JAR inside the Docker container.
@@ -44,7 +44,7 @@ spec:
     cores: 1
     memory: "1024m" # e.g., 1 gigabyte
     labels:
-      version: 3.5.3
+      version: 3.5.5
     # A service account with permissions to create and manage executor pods is required.
     serviceAccount: spark
 
@@ -54,4 +54,4 @@ spec:
     cores: 1
     memory: "1024m"
     labels:
-      version: 3.5.3
+      version: 3.5.5
