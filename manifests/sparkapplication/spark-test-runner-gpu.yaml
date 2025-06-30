@@ -42,22 +42,19 @@ spec:
   # Configuration for the Spark driver pod.
   driver:
     cores: 1
+    coreLimit: "1000m" # Added coreLimit for the driver
     memory: "1024m" # e.g., 1 gigabyte
     labels:
       version: 3.5.3
       app-role: test-driver
     # A service account with permissions to create and manage executor pods is required.
     serviceAccount: spark
-    resources: # Explicitly define resources for the driver pod
-      requests:
-        ephemeral-storage: "1Gi" # Request 1Gi of ephemeral storage
-      limits:
-        ephemeral-storage: "20Gi" # Limit to 20Gi of ephemeral storage
 
   # Configuration for the Spark executor pods.
   executor:
     instances: 1 # Only 1 executor is needed for this simple test.
     cores: 1
+    coreLimit: "1000m"
     memory: "1024m"
     labels:
       version: 3.5.3
@@ -66,37 +63,32 @@ spec:
     # based on NFD labels.
     nodeSelector:
       "nvidia.com/gpu.present": "true" # A common label applied by NVIDIA GPU operator/NFD
-    resources: # Explicitly define resources for the executor pods
-      requests:
-        ephemeral-storage: "1Gi" # Request 1Gi of ephemeral storage
-      limits:
-        ephemeral-storage: "20Gi" # Limit to 20Gi of ephemeral storage
 
   # Add Spark configuration properties.
   sparkConf:
-    # Driver GPU configuration
-    spark.kubernetes.driver.resource.gpu.vendor: "nvidia.com"
-    spark.kubernetes.driver.resource.gpu.amount: "1"
-    # Explicitly tell Spark where the GPU discovery script is located for the driver.
-    spark.kubernetes.driver.resource.gpu.discoveryScript: "/opt/spark/scripts/getGpusResources.sh"
+    # Enabling RAPIDS plugin
+    spark.plugins: "com.nvidia.spark.SQLPlugin"
+    spark.rapids.sql.enabled: "true"
+    spark.rapids.force.caller.classloader: "false" # Added new RAPIDS config
 
-    # Executor GPU configuration
+    # GPU allocation and discovery settings
+    spark.task.resource.gpu.amount: "1"
+    spark.executor.resource.gpu.amount: "1"
+    spark.kubernetes.driver.resource.gpu.vendor: "nvidia.com" # Kept for driver GPU
+    spark.kubernetes.driver.resource.gpu.amount: "1" # Kept for driver GPU
+    spark.kubernetes.driver.resource.gpu.discoveryScript: "/opt/spark/scripts/getGpusResources.sh" # Kept for driver GPU
     spark.kubernetes.executor.resource.gpu.vendor: "nvidia.com"
-    spark.kubernetes.executor.resource.gpu.amount: "1"
-    # Explicitly tell Spark where the GPU discovery script is located for executors.
-    spark.kubernetes.executor.resource.gpu.discoveryScript: "/opt/spark/scripts/getGpusResources.sh"
+    spark.kubernetes.executor.resource.gpu.discoveryScript: "/opt/mapr/spark/spark-3.5.3/examples/src/main/scripts/getGpusResources.sh" # Updated discovery script path
+    spark.rapids.shims-provider-override: "com.nvidia.spark.rapids.shims.spark355.SparkShimServiceProvider" # Added new RAPIDS shim config
 
-    # Ephemeral storage configuration (kept as they are Spark-specific configs)
+    # Ephemeral storage configuration (these are correctly handled by Spark Operator
+    # through these sparkConf properties, not direct pod.spec.resources)
     spark.kubernetes.driver.request.ephemeralStorage: "1Gi"
     spark.kubernetes.driver.limit.ephemeralStorage: "20Gi"
     spark.kubernetes.executor.request.ephemeralStorage: "1Gi"
     spark.kubernetes.executor.limit.ephemeralStorage: "20Gi"
 
-    # RAPIDS Accelerator plugin configurations
-    spark.plugins: "com.nvidia.spark.SQLPlugin"
-    spark.rapids.sql.enabled: "true"
+    # Optional: Log detailed RAPIDS explanations for debugging and verification
     spark.rapids.sql.explain: "true"
+    # Optional: For more verbose logging of RAPIDS activity
     spark.rapids.sql.logLevel: "INFO" # or DEBUG
-
-  Spark Version: "3.5.3"
-  Type: Scala
