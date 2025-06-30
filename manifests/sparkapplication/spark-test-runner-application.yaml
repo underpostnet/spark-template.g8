@@ -75,9 +75,9 @@ spec:
 
     # Ephemeral storage configuration
     spark.kubernetes.driver.request.ephemeralStorage: "1Gi"
-    spark.kubernetes.driver.limit.ephemeralStorage: "14Gi" # Increased limit
+    spark.kubernetes.driver.limit.ephemeralStorage: "20Gi"
     spark.kubernetes.executor.request.ephemeralStorage: "1Gi"
-    spark.kubernetes.executor.limit.ephemeralStorage: "14Gi" # Increased limit
+    spark.kubernetes.executor.limit.ephemeralStorage: "20Gi"
     # Enable the RAPIDS Accelerator plugin
     spark.plugins: "com.nvidia.spark.SQLPlugin"
     # Enable SQL query acceleration by RAPIDS
