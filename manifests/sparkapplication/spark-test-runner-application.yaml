@@ -58,15 +58,26 @@ spec:
     nodeSelector:
       "nvidia.com/gpu.present": "true" # A common label applied by NVIDIA GPU operator/NFD
 
-  # Add Spark configuration properties to request GPU resources.
+  # Add Spark configuration properties to request GPU and ephemeral storage resources.
   # The Spark Operator translates these properties into Kubernetes resource requests.
   sparkConf:
     # Driver GPU configuration
     spark.kubernetes.driver.resource.gpu.vendor: "nvidia.com"
     spark.kubernetes.driver.resource.gpu.amount: "1"
+    # Explicitly tell Spark where the GPU discovery script is located for the driver.
+    spark.kubernetes.driver.resource.gpu.discoveryScript: "/opt/spark/scripts/getGpusResources.sh"
+
     # Executor GPU configuration
     spark.kubernetes.executor.resource.gpu.vendor: "nvidia.com"
     spark.kubernetes.executor.resource.gpu.amount: "1"
+    # Explicitly tell Spark where the GPU discovery script is located for executors.
+    spark.kubernetes.executor.resource.gpu.discoveryScript: "/opt/spark/scripts/getGpusResources.sh"
+
+    # Ephemeral storage configuration
+    spark.kubernetes.driver.request.ephemeralStorage: "1Gi"
+    spark.kubernetes.driver.limit.ephemeralStorage: "14Gi" # Increased limit
+    spark.kubernetes.executor.request.ephemeralStorage: "1Gi"
+    spark.kubernetes.executor.limit.ephemeralStorage: "14Gi" # Increased limit
     # Enable the RAPIDS Accelerator plugin
     spark.plugins: "com.nvidia.spark.SQLPlugin"
     # Enable SQL query acceleration by RAPIDS

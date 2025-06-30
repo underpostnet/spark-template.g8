@@ -26,6 +26,18 @@ object TestRunner {
     // Set the SparkSession instance for other components to use
     sparkSessionInstance = Some(spark)
 
+    // Register a shutdown hook to stop the SparkSession gracefully
+    // This ensures SparkContext is stopped only when the JVM is exiting,
+    // allowing all Spark jobs to complete.
+    sys.addShutdownHook {
+      println("=============================================")
+      println("===       SHUTDOWN HOOK ACTIVATED         ===")
+      println("===     Stopping SparkSession gracefully  ===")
+      println("=============================================")
+      spark.stop()
+      sparkSessionInstance = None // Clear the instance
+    }
+
     println("=============================================")
     println("===          RUNNING SPARK TESTS          ===")
     println("=============================================")
@@ -49,10 +61,6 @@ object TestRunner {
     println("=============================================")
     println("===        SPARK TESTS COMPLETED          ===")
     println("=============================================")
-
-    // Stop the SparkSession after all tests have completed.
-    spark.stop()
-    sparkSessionInstance = None // Clear the instance
 
     // Exit with a non-zero status code if tests failed.
     if (!testResult) {

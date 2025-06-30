@@ -36,13 +36,13 @@ FROM apache/spark:3.5.3-scala2.12-java17-python3-r-ubuntu
 COPY --from=builder /app/target/scala-2.12/spark-template.jar /opt/spark/jars/
 
 # Download and set up the getGpusResources.sh script.
-# This script is used by Spark for dynamic GPU resource scheduling.
-# Note: For this script to be effective, the underlying Kubernetes node and
-# the Spark image would still need to have NVIDIA GPU drivers and CUDA installed,
-# which are not provided by this base image.
+# Place it in /opt/spark/bin, which is a standard location for Spark scripts.
+# This also avoids potential conflicts or unexpected behavior if Spark tries
+# to stage files into the /opt/spark/scripts directory.
 WORKDIR /opt/spark/scripts
 RUN wget -O getGpusResources.sh https://raw.githubusercontent.com/apache/spark/master/examples/src/main/scripts/getGpusResources.sh \
     && chmod u+x getGpusResources.sh
 
-# The image is now ready. The Spark operator will invoke `spark-submit`
-# with this image and point it to the JAR file inside.
+
+WORKDIR /opt/spark/work-dir
+
