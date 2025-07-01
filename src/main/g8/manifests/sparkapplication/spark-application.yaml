@@ -12,7 +12,7 @@ spec:
   # The mode can be 'cluster' or 'client'. 'cluster' is standard for production.
   mode: cluster
   # The Spark version. MUST match the version in the Docker image and build.sbt.
-  sparkVersion: "$sparkVersion$"
+  sparkVersion: $sparkVersion$
   # The main class that serves as the entry point for your application.
   mainClass: $organization$.HelloWorld
   # The location of your application JAR inside the Docker container.
