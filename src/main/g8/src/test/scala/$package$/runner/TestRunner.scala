@@ -13,9 +13,9 @@ object TestRunner {
 
   def main(args: Array[String]): Unit = {
     // Define the organization string as a Scala variable.
-    // This value will be replaced by SBT during project generation.
-    // In a real project, you might get this from a configuration file or environment variable.
-    val organizationName = "$organization$" // SBT will replace this placeholder
+    // This value will be replaced by SBT's giter8 during project generation.
+    // The "$organization$" part is a giter8 template variable.
+    val organizationName = "$organization$"
 
     // Create the SparkSession for the entire test run.
     // This SparkSession will be reused by all test suites.
@@ -45,9 +45,9 @@ object TestRunner {
       Array(
         "-o",
         // "-s",
-        // s"$organizationName.spec.HelloWorldSpec",
+        // \$s"$organizationName.spec.HelloWorldSpec",
         "-s",
-        s"$organizationName.spec.GpuTestSpec"
+        \$s"$organizationName.spec.GpuTestSpec"
       )
     )
 
