@@ -1,18 +1,18 @@
 PROJECT_DIR=/home/dd/spark-template.g8
-PROJECT_VERSION=latest
+PROJECT_VERSION=0.0.1
 IMAGE_NAME=spark-template
 
-IMAGE_NAME_FULL="${IMAGE_NAME}:${PROJECT_VERSION}"
+IMAGE_NAME_FULL="\${IMAGE_NAME}:\${PROJECT_VERSION}"
 
-cd ${PROJECT_DIR}
+cd \${PROJECT_DIR}
 
 # Pull the builder image that matches the project's Scala version.
 sudo podman pull docker.io/sbtscala/scala-sbt:eclipse-temurin-jammy-11.0.17_8_1.9.3_2.12.18
 sudo podman pull apache/spark:3.5.5-scala2.12-java17-python3-r-ubuntu
 
-sudo rm -rf ${PROJECT_DIR}/${IMAGE_NAME}_${PROJECT_VERSION}.tar
+sudo rm -rf \${PROJECT_DIR}/\${IMAGE_NAME}_\${PROJECT_VERSION}.tar
 
-node ../engine/bin dockerfile-image-build --path ${PROJECT_DIR} --image-name=${IMAGE_NAME_FULL} --image-path=${PROJECT_DIR} --podman-save --kubeadm-load --no-cache
+underpost dockerfile-image-build --path \${PROJECT_DIR} --image-name=\${IMAGE_NAME_FULL} --image-path=\${PROJECT_DIR} --podman-save --kubeadm-load --no-cache
 
 # Apply the RBAC rules first to create the service account and its permissions.
 # This must be done before the SparkApplication is created.
