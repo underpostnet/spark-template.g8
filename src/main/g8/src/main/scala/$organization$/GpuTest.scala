@@ -22,9 +22,9 @@ object GpuTest {
     println("=============================================")
 
     // Execute a SQL query and explain the plan (to see GPU optimizations)
-    spark.sql(s"SELECT value FROM $viewName WHERE value <>1").explain()
+    spark.sql("SELECT value FROM " + viewName + " WHERE value <>1").explain()
     // Show the results of the SQL query
-    spark.sql(s"SELECT value FROM $viewName WHERE value <>1").show()
+    spark.sql("SELECT value FROM " + viewName + " WHERE value <>1").show()
 
     println("=============================================")
     println("===        GPU TEST APP COMPLETED         ===")
