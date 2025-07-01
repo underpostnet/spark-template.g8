@@ -1,7 +1,7 @@
-package com.example.spark.app
+package $organization$.spec
 
-import com.example.spark.test.SparkSessionTestWrapper
-import com.example.spark.runner.TestRunner // Import TestRunner to access the shared SparkSession
+import $organization$.SparkSessionTestWrapper
+import $organization$.runner.TestRunner // Import TestRunner to access the shared SparkSession
 import com.github.mrpowers.spark.fast.tests.DataFrameComparer
 import org.apache.spark.sql.{Row, SparkSession}
 import org.apache.spark.sql.types.{StringType, StructField, StructType}

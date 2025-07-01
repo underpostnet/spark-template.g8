@@ -36,7 +36,7 @@ apiVersion: "sparkoperator.k8s.io/v1beta2"
 kind: SparkApplication
 metadata:
   # The name of your application instance in Kubernetes.
-  name: scala-spark-gpu-tests
+  name: $name__norm$-gpu-tests
   # The namespace where the Spark Operator is running.
   namespace: default
 spec:
@@ -45,16 +45,16 @@ spec:
   # The mode can be 'cluster' or 'client'. 'cluster' is standard for production.
   mode: cluster
   # The Spark version. MUST match the version in the Docker image and build.sbt.
-  sparkVersion: "3.5.5"
+  sparkVersion: "$sparkVersion$"
   # The main class that serves as the entry point for your test runner.
-  mainClass: com.example.spark.runner.TestRunner
+  mainClass: $organization$.runner.TestRunner
   # The location of your application JAR inside the Docker container.
   # The 'local://' scheme is crucial to tell Spark the file is already in the image.
-  mainApplicationFile: "local:///opt/spark/jars/spark-template.jar"
+  mainApplicationFile: "local:///opt/spark/jars/$name__norm$.jar"
 
   # IMPORTANT: Replace this with the actual name of your Docker image after
   # building and pushing it to a registry (like Docker Hub, GCR, ECR, etc.).
-  image: "localhost/spark-template:latest" # Using the image name directly
+  image: "localhost/$name__norm$:latest" # Using the image name directly
 
   # Explicitly set the pull policy to 'Never'.
   # This is crucial for local Kind development to ensure Kubernetes does not
@@ -77,7 +77,7 @@ spec:
     coreLimit: "1000m" # Added coreLimit for the driver
     memory: "1024m" # e.g., 1 gigabyte
     labels:
-      version: 3.5.5
+      version: $sparkVersion$
       app-role: test-driver
     # A service account with permissions to create and manage executor pods is required.
     serviceAccount: spark
@@ -100,7 +100,7 @@ spec:
       name: "nvidia.com/gpu"
       quantity: 1
     labels:
-      version: 3.5.5
+      version: $sparkVersion$
       app-role: test-executor
     # Node affinity to schedule executors on nodes with GPU capabilities,
     # based on NFD labels.

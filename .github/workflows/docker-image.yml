@@ -2,7 +2,7 @@ name: Spark template Docker Image CI
 on: push
 jobs:
   build:
-    if: github.repository == 'underpostnet/spark-template' && startsWith(github.event.head_commit.message, 'ci(docker-image-spark-template)')
+    if: github.repository == 'underpostnet/spark-template.g8' && startsWith(github.event.head_commit.message, 'ci(docker-image-spark-template)')
     runs-on: ubuntu-latest
 
     permissions:

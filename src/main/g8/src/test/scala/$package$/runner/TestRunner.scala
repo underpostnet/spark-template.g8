@@ -1,8 +1,8 @@
-package com.example.spark.runner
+package $organization$.runner
 
 import org.apache.spark.sql.SparkSession
 import org.scalatest.tools.Runner
-import com.example.spark.test.SparkSessionTestWrapper // Import the trait
+import $organization$.SparkSessionTestWrapper // Import the trait
 
 object TestRunner {
 
@@ -40,9 +40,9 @@ object TestRunner {
       Array(
         "-o",
         // "-s",
-        // "com.example.spark.app.HelloWorldSpec",
+        // "$organization$.spec.HelloWorldSpec",
         "-s",
-        "com.example.spark.app.GpuTestSpec" // New GPU test suite
+        "$organization$.spec.GpuTestSpec" // New GPU test suite
       )
     )
 

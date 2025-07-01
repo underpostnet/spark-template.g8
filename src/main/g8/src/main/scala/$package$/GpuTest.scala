@@ -1,13 +1,13 @@
-package com.example.spark.app // Reverted package name to original
+package $organization$
 
 import org.apache.spark.sql.SparkSession
 
-object GpuTest { // Renamed object back to GpuTest
+object GpuTest {
 
   def main(args: Array[String]): Unit = {
     val spark = SparkSession
       .builder()
-      .appName("GpuTestApp") // Added appName for clarity
+      .appName("GpuTestApp")
       .getOrCreate()
     val sc = spark.sparkContext
 
