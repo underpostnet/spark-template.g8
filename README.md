@@ -29,7 +29,7 @@ If you don't have sbt installed, follow the instructions on the [official sbt we
 
 #### 2. Create a New Project from the Template
 
-Open your terminal and run the following command. Replace `underpostnet` with the actual GitHub username where this template repository is hosted:
+Open your terminal and run the following command.
 
 ```bash
 sbt new underpostnet/spark-template.g8
