@@ -19,11 +19,11 @@ spec:
   # When running in a container, often just the JAR name is sufficient if it's
   # in a standard classpath location. The 'local://' scheme is crucial
   # to tell Spark the file is already in the image.
-  mainApplicationFile: "local:///opt/spark/jars/\$name__norm\$.jar"
+  mainApplicationFile: "local:///opt/spark/jars/\$name\$.jar"
 
   # IMPORTANT: Replace this with the actual name of your Docker image after
   # building and pushing it to a registry (like Docker Hub, GCR, ECR, etc.).
-  image: "localhost/\$name__norm\$:\$version\$" # Using dynamic image name and version
+  image: "localhost/\$name\$:\$version\$" # Using dynamic image name and version
 
   # Explicitly set the pull policy to 'Never'.
   # This is crucial for local Kind development to ensure Kubernetes does not

@@ -42,7 +42,7 @@ lazy val root = (project in file("."))
     // sbt-assembly settings to create a runnable JAR
     assembly / mainClass := Some("\$organization\$.runner.TestRunner"),
     // Use a static JAR name to make the build process more robust.
-    assembly / assemblyJarName := "\$name__norm\$.jar",
+    assembly / assemblyJarName := "\$name\$.jar",
     // Include test classes in the assembly JAR to allow running tests on the cluster.
     assembly / test := true,
     assembly / assemblyMergeStrategy := {

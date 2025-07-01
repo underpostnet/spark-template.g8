@@ -33,7 +33,7 @@ FROM apache/spark:\$sparkVersion\$-scala\$scalaVersionUsedMajor\$-java17-python3
 # The base image's WORKDIR is /opt/spark/work-dir, which is suitable.
 # We copy our application JAR into /opt/spark/jars, which is on the
 # default classpath for Spark.
-COPY --from=builder /app/target/scala-\$scalaVersionUsedMajor\$/\$name__norm\$.jar /opt/spark/jars/
+COPY --from=builder /app/target/scala-\$scalaVersionUsedMajor\$/\$name\$.jar /opt/spark/jars/
 
 # Download and set up the getGpusResources.sh script.
 # Place it in /opt/spark/bin, which is a standard location for Spark scripts.
