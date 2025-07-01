@@ -12,6 +12,11 @@ object TestRunner {
   var sparkSessionInstance: Option[SparkSession] = None
 
   def main(args: Array[String]): Unit = {
+    // Define the organization string as a Scala variable.
+    // This value will be replaced by SBT during project generation.
+    // In a real project, you might get this from a configuration file or environment variable.
+    val organizationName = "$organization$" // SBT will replace this placeholder
+
     // Create the SparkSession for the entire test run.
     // This SparkSession will be reused by all test suites.
     val spark = SparkSession.builder
@@ -40,9 +45,9 @@ object TestRunner {
       Array(
         "-o",
         // "-s",
-        // "$organization$.spec.HelloWorldSpec",
+        // s"$organizationName.spec.HelloWorldSpec",
         "-s",
-        "$organization$.spec.GpuTestSpec" // New GPU test suite
+        s"$organizationName.spec.GpuTestSpec"
       )
     )
 
