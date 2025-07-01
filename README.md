@@ -1,5 +1,7 @@
 ## Spark on Kubernetes Template
 
+<img alt='apache_spark' src='https://img.shields.io/badge/apache_spark%20v3.5.5-100000?style=flat&logo=apache-spark&logoColor=FFFFFF&labelColor=C76E00&color=727273'/> <img alt='scala' src='https://img.shields.io/badge/scala%20v2.12-100000?style=flat&logo=scala&logoColor=FFFFFF&labelColor=8b0000&color=727273'>
+
 [![Spark CI](https://github.com/underpostnet/spark-template/actions/workflows/docker-image.yml/badge.svg?branch=master)](https://github.com/underpostnet/spark-template/actions/workflows/docker-image.yml)
 
 Build, test, and deploy Scala Spark applications on Kubernetes using the Spark Operator.
