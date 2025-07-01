@@ -29,14 +29,6 @@ replace_variables() {
     props["$key"]="$value"
   done <"$properties_file"
 
-  # Apply __norm rule: remove hyphens and convert to lowercase for __norm variables
-  for key in "${!props[@]}"; do
-    local original_value="${props[$key]}"
-    # Normalize the value: remove hyphens and convert to lowercase
-    local normalized_value=$(echo "$original_value" | sed 's/-//g' | tr '[:upper:]' '[:lower:]')
-    props["${key}__norm"]="$normalized_value"
-  done
-
   # Create temporary files for processing
   local temp_file_intermediate=$(mktemp)
   local temp_file_final=$(mktemp)
@@ -50,16 +42,23 @@ replace_variables() {
   # Read from the intermediate file and apply property replacements
   while IFS= read -r line; do
     local modified_line="$line"
-    # Iterate through keys in reverse order of length to ensure longer keys (like __norm) are replaced first
-    # This prevents 'name' from being replaced before 'name__norm'
+
+    # Create a temporary file for the current line's processing
+    local current_line_tmp=$(mktemp)
+    echo "$modified_line" >"$current_line_tmp"
+
+    # Iterate through keys (sorted by length to handle potential overlaps, e.g., 'name' before 'name_long')
     for key in $(printf "%s\n" "${!props[@]}" | awk '{ print length, $0 }' | sort -rn | cut -d" " -f2-); do
       local value="${props[$key]}"
-      # Escape slashes, ampersands, and the sed delimiter itself (if it's part of the value)
-      local escaped_value=$(echo "$value" | sed -e 's/[\/&]/\\&/g')
-      # Replace the variable pattern \$key\$ with its escaped value
-      modified_line=$(echo "$modified_line" | sed "s/\\\$${key}\\\$/${escaped_value}/g")
+      # Escape slashes, ampersands, and the sed delimiter itself (here, '#') if it's part of the value
+      local escaped_value=$(echo "$value" | sed -e 's/#/\\#/g' -e 's/[\/&]/\\&/g')
+      # Use sed -i (in-place) on the temporary file for the line
+      # Using '#' as the delimiter for sed to avoid conflicts with '/' in paths/URLs
+      sed -i "s#\\\$${key}\\\$#${escaped_value}#g" "$current_line_tmp"
+      modified_line=$(cat "$current_line_tmp") # Read back the modified line
     done
     echo "$modified_line" >>"$temp_file_final"
+    rm "$current_line_tmp" # Clean up line temp file
   done <"$temp_file_intermediate"
 
   # Overwrite the original file with the modified content from the final temporary file
