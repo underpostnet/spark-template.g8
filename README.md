@@ -6,7 +6,7 @@
 
 This project provides template for building, testing, and deploying Scala Spark applications on Kubernetes using the Spark Operator.
 
-## Core Features
+### Core Features
 
 - **Scala & sbt**: Leverages `sbt` for a standard Scala project structure, dependency management, and build automation.
 - **Containerized Workflows**: A multi-stage `Dockerfile` ensures a lean and optimized Docker image for your Spark application, based on official Apache Spark images.
@@ -19,15 +19,15 @@ This project provides template for building, testing, and deploying Scala Spark 
 - **Ephemeral Storage Configuration**: Demonstrates how to configure ephemeral storage requests and limits for Spark driver and executor pods.
 - **ConfigMap Integration**: Utilizes Kubernetes ConfigMaps (`spark-driver-pod-config`, `spark-executor-pod-config`) to inject pod spec fragments, allowing for flexible and advanced pod configurations.
 
-## How to Use This Template
+### How to Use This Template
 
 This project is designed as a [Giter8 template](https://www.foundweekends.org/giter8/index.html), making it easy to generate new Spark projects with all the pre-configured settings.
 
-### 1. Install sbt
+#### 1. Install sbt
 
 If you don't have sbt installed, follow the instructions on the [official sbt website](https://www.scala-sbt.org/download.html). Ensure you have sbt launcher version 0.13.13 or above.
 
-### 2. Create a New Project from the Template
+#### 2. Create a New Project from the Template
 
 Open your terminal and run the following command. Replace `underpostnet` with the actual GitHub username where this template repository is hosted:
 
