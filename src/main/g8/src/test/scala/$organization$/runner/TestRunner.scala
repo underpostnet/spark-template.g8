@@ -15,7 +15,7 @@ object TestRunner {
     // Define the organization string as a Scala variable.
     // This value will be replaced by SBT during project generation.
     // In a real project, you might get this from a configuration file or environment variable.
-    val organizationName = "net.underpost"
+    val organizationName = "$organization$"
 
     // Create the SparkSession for the entire test run.
     // This SparkSession will be reused by all test suites.
