@@ -2,6 +2,7 @@ package $organization$.spec
 
 import $organization$.SparkSessionTestWrapper
 import $organization$.runner.TestRunner // Import TestRunner to access the shared SparkSession
+import $organization$.HelloWorld
 import com.github.mrpowers.spark.fast.tests.DataFrameComparer
 import org.apache.spark.sql.{Row, SparkSession}
 import org.apache.spark.sql.types.{StringType, StructField, StructType}

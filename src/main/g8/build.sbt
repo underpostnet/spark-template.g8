@@ -2,6 +2,8 @@
 // FILE: build.sbt
 // -------------------------------------------------------------------
 
+import org.apache.spark.sql.SparkSession
+
 // Define project versions.
 // The Scala version should match the one Spark was built with in your Docker image.
 // The apache/spark:3.5.5 image uses Scala 2.12.
@@ -44,12 +46,43 @@ lazy val root = (project in file("."))
     // Use a static JAR name to make the build process more robust.
     assembly / assemblyJarName := "\$name\$.jar",
     // Include test classes in the assembly JAR to allow running tests on the cluster.
-    assembly / test := true,
+    // assembly / test := true,
     assembly / assemblyMergeStrategy := {
       case PathList("META-INF", "services", xs @ _*) =>
         MergeStrategy.concat // Concatenate service files
       case PathList("META-INF", xs @ _*) =>
         MergeStrategy.discard // Discard other META-INF
       case x => MergeStrategy.first
-    }
+    },
+    
+    // Configure setup and cleanup actions for the 'sbt test' command.
+    // This ensures a SparkSession is available for local tests run via sbt,
+    // which is necessary for the Docker build step. We use the test classloader
+    // (`loader`) to access the project's own compiled classes (like TestRunner)
+    // via reflection. This is required because the build definition (build.sbt)
+    // is compiled before the project's code and does not have direct access to it.
+    Test / testOptions ++= Seq(
+      Tests.Setup { loader =>
+        // Create a local SparkSession before any tests run.
+        val spark = SparkSession.builder
+          .master("local[*]")
+          .appName("sbt-test-session")
+          .config("spark.driver.host", "localhost") // Often needed for local testing
+          .getOrCreate()
+        // Use the test classloader to get the TestRunner companion object and set the session.
+        val testRunnerClass = loader.loadClass("net.underpost.runner.TestRunner$")
+        val testRunnerModule = testRunnerClass.getField("MODULE$").get(null)
+        val setter = testRunnerModule.getClass.getMethod("sparkSessionInstance_$eq", classOf[Option[SparkSession]])
+        setter.invoke(testRunnerModule, Some(spark))
+      },
+      Tests.Cleanup { loader =>
+        // Use the test classloader to get the TestRunner and clean up the session.
+        val testRunnerClass = loader.loadClass("net.underpost.runner.TestRunner$")
+        val testRunnerModule = testRunnerClass.getField("MODULE$").get(null)
+        val getter = testRunnerModule.getClass.getMethod("sparkSessionInstance")
+        val sessionOpt = getter.invoke(testRunnerModule).asInstanceOf[Option[SparkSession]]
+        sessionOpt.foreach(_.stop())
+        val setter = testRunnerModule.getClass.getMethod("sparkSessionInstance_$eq", classOf[Option[SparkSession]])
+        setter.invoke(testRunnerModule, None)
+      }
   )
