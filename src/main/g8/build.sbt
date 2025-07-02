@@ -70,19 +70,19 @@ lazy val root = (project in file("."))
           .config("spark.driver.host", "localhost") // Often needed for local testing
           .getOrCreate()
         // Use the test classloader to get the TestRunner companion object and set the session.
-        val testRunnerClass = loader.loadClass("net.underpost.runner.TestRunner$")
-        val testRunnerModule = testRunnerClass.getField("MODULE$").get(null)
-        val setter = testRunnerModule.getClass.getMethod("sparkSessionInstance_$eq", classOf[Option[SparkSession]])
+        val testRunnerClass = loader.loadClass("net.underpost.runner.TestRunner\$")
+        val testRunnerModule = testRunnerClass.getField("MODULE\$").get(null)
+        val setter = testRunnerModule.getClass.getMethod("sparkSessionInstance_\$eq", classOf[Option[SparkSession]])
         setter.invoke(testRunnerModule, Some(spark))
       },
       Tests.Cleanup { loader =>
         // Use the test classloader to get the TestRunner and clean up the session.
-        val testRunnerClass = loader.loadClass("net.underpost.runner.TestRunner$")
-        val testRunnerModule = testRunnerClass.getField("MODULE$").get(null)
+        val testRunnerClass = loader.loadClass("net.underpost.runner.TestRunner\$")
+        val testRunnerModule = testRunnerClass.getField("MODULE\$").get(null)
         val getter = testRunnerModule.getClass.getMethod("sparkSessionInstance")
         val sessionOpt = getter.invoke(testRunnerModule).asInstanceOf[Option[SparkSession]]
         sessionOpt.foreach(_.stop())
-        val setter = testRunnerModule.getClass.getMethod("sparkSessionInstance_$eq", classOf[Option[SparkSession]])
+        val setter = testRunnerModule.getClass.getMethod("sparkSessionInstance_\$eq", classOf[Option[SparkSession]])
         setter.invoke(testRunnerModule, None)
       }
   )
