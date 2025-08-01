@@ -59,8 +59,8 @@ jobs:
           rm -rf ./spark-template/.git
           mv ./tmp/spark-template/.git ./spark-template/.git
           cd ./spark-template
-          git init
           git remote set-url origin git@github.com:underpostnet/spark-template.git
+          git init
           git add .
           git config user.name 'underpost.net'
           git config user.email 'admin@underpost.net'
