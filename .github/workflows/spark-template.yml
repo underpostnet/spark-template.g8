@@ -1,0 +1,51 @@
+name: Update spark template repo package
+on:
+  push:
+    branches: ['master']
+  pull_request:
+    branches: ['master']
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+jobs:
+  spark-template:
+    if: github.repository == 'underpostnet/spark-template.g8'
+    name: Update github repo package Jobs
+    runs-on: ubuntu-latest
+    container:
+      image: rockylinux/rockylinux:9
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install required packages
+        run: |
+          dnf install -y sudo tar gzip bzip2 git
+          dnf install -y curl --allowerasing
+
+ 
+      - name: Set git global credentials
+        run: |
+          git config --global credential.helper ""
+          git config --global user.name 'underpost.net'
+          git config --global user.email 'admin@underpost.net'
+
+      - name: Clone and Push to github package repository
+        run: |
+          underpost clone --bare -g8 underpostnet/spark-template
+          rm -rf ./.git
+          mv ./spark-template.git ./.git
+          pwd
+          git config --global --add safe.directory /__w/spark-template/spark-template
+          git remote set-url origin git@github.com:underpostnet/spark-template.git
+          git init
+          git config user.name 'underpost.net'
+          git config user.email 'admin@underpost.net'
+          git add .
+          git status
+          underpost cmt . ci package-spark-template 'Update spark-template repo package'
+          underpost push . underpostnet/spark-template
