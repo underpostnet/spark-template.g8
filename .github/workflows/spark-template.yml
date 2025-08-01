@@ -1,13 +1,16 @@
 name: Update spark template repo package
+
 on:
   push:
     branches: ['master']
   pull_request:
     branches: ['master']
+
 permissions:
   contents: write
   packages: write
   id-token: write
+
 jobs:
   spark-template:
     if: github.repository == 'underpostnet/spark-template' && startsWith(github.event.head_commit.message, 'ci(update-template)')
@@ -19,6 +22,7 @@ jobs:
       contents: write
       packages: write
       id-token: write
+
     steps:
       - uses: actions/checkout@v3
 
@@ -38,18 +42,23 @@ jobs:
         run: |
           curl -fsSL https://rpm.nodesource.com/setup_23.x | bash -
           dnf install nodejs -y
+
       - name: Install dependencies and set repo configuration
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_AUTH_TOKEN }}
         run: |
           npm install -g underpost
-          underpost config set GITHUB_TOKEN ${{ secrets.GIT_AUTH_TOKEN }}
+          underpost config set GITHUB_TOKEN "$GITHUB_TOKEN"
+
       - name: Set git global credentials
         run: |
-          git config --global credential.helper ""
+          git config --global credential.helper store
           git config --global user.name 'underpost.net'
           git config --global user.email 'admin@underpost.net'
 
-
       - name: Clone and Push to github package repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_AUTH_TOKEN }}
         run: |
           sbt new underpostnet/spark-template.g8 '--name=spark-template'
           mkdir ./tmp
@@ -59,7 +68,7 @@ jobs:
           rm -rf ./spark-template/.git
           mv ./tmp/spark-template/.git ./spark-template/.git
           cd ./spark-template
-          git remote set-url origin git@github.com:underpostnet/spark-template.git
+          git remote set-url origin https://underpost:${GITHUB_TOKEN}@github.com/underpostnet/spark-template.git
           git init
           git add .
           git config user.name 'underpost.net'
