@@ -68,6 +68,6 @@ jobs:
           git add .
           git config user.name 'underpost.net'
           git config user.email 'admin@underpost.net'
-          underpost cmt . ci package-spark-template-ghpkg 'Update spark-template repo package'
+          underpost cmt . ci docker-image-spark-template 'Update spark-template repo package'
           underpost push . underpostnet/spark-template
          
