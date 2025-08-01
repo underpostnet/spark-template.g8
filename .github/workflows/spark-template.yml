@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   spark-template:
-    if: github.repository == 'underpostnet/spark-template' && startsWith(github.event.head_commit.message, 'ci(update-template)')
+    if: github.repository == 'underpostnet/spark-template.g8' && startsWith(github.event.head_commit.message, 'ci(update-template)')
     name: Update github repo package Jobs
     runs-on: ubuntu-latest
     container:
@@ -61,12 +61,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GIT_AUTH_TOKEN }}
         run: |
           sbt new underpostnet/spark-template.g8 '--name=spark-template'
-          mkdir ./tmp
-          cd ./tmp
-          underpost clone underpostnet/spark-template
-          cd ..
-          rm -rf ./spark-template/.git
-          mv ./tmp/spark-template/.git ./spark-template/.git
+          underpost clone --bare underpostnet/spark-template-demo
+          mv ./spark-template-demo.git ./spark-template/.git
           cd ./spark-template
           git remote set-url origin https://underpost:${GITHUB_TOKEN}@github.com/underpostnet/spark-template.git
           git init
