@@ -86,3 +86,4 @@ lazy val root = (project in file("."))
         setter.invoke(testRunnerModule, None)
       }
   )
+)
