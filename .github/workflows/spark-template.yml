@@ -26,8 +26,27 @@ jobs:
         run: |
           dnf install -y sudo tar gzip bzip2 git
           dnf install -y curl --allowerasing
+          rm -f /etc/yum.repos.d/bintray-rpm.repo || true
+          curl -L https://www.scala-sbt.org/sbt-rpm.repo > sbt-rpm.repo
+          mv sbt-rpm.repo /etc/yum.repos.d/
+          yum install sbt
 
- 
+
+      - name: Install Node.js
+        run: |
+          curl -fsSL https://rpm.nodesource.com/setup_23.x | bash -
+          dnf install nodejs -y
+      - name: Install dependencies and set repo configuration
+        run: |
+          npm install -g underpost
+          underpost config set GITHUB_TOKEN ${{ secrets.GIT_AUTH_TOKEN }}
+      - name: Set git global credentials
+        run: |
+          git config --global credential.helper ""
+          git config --global user.name 'underpost.net'
+          git config --global user.email 'admin@underpost.net'
+
+
       - name: Set git global credentials
         run: |
           git config --global credential.helper ""
@@ -36,16 +55,19 @@ jobs:
 
       - name: Clone and Push to github package repository
         run: |
-          underpost clone --bare -g8 underpostnet/spark-template
-          rm -rf ./.git
-          mv ./spark-template.git ./.git
-          pwd
-          git config --global --add safe.directory /__w/spark-template/spark-template
-          git remote set-url origin git@github.com:underpostnet/spark-template.git
+          sbt new underpostnet/spark-template.g8 '--name=spark-template'
+          mkdir ./tmp
+          cd ./tmp
+          underpost clone underpostnet/spark-template
+          cd ..
+          rm -rf ./spark-template/.git
+          mv ./tmp/spark-template/.git ./spark-template/.git
+          cd ./spark-template
           git init
+          git remote set-url origin git@github.com:underpostnet/spark-template.git
+          git add .
           git config user.name 'underpost.net'
           git config user.email 'admin@underpost.net'
-          git add .
-          git status
-          underpost cmt . ci package-spark-template 'Update spark-template repo package'
+          underpost cmt . ci package-spark-template-ghpkg 'Update spark-template repo package'
           underpost push . underpostnet/spark-template
+         
