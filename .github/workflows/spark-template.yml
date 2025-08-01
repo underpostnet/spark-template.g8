@@ -10,7 +10,7 @@ permissions:
   id-token: write
 jobs:
   spark-template:
-    if: github.repository == 'underpostnet/spark-template.g8'
+    if: github.repository == 'underpostnet/spark-template' && startsWith(github.event.head_commit.message, 'ci(update-template)')
     name: Update github repo package Jobs
     runs-on: ubuntu-latest
     container:
