@@ -47,12 +47,6 @@ jobs:
           git config --global user.email 'admin@underpost.net'
 
 
-      - name: Set git global credentials
-        run: |
-          git config --global credential.helper ""
-          git config --global user.name 'underpost.net'
-          git config --global user.email 'admin@underpost.net'
-
       - name: Clone and Push to github package repository
         run: |
           sbt new underpostnet/spark-template.g8 '--name=spark-template'
