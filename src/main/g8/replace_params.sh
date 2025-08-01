@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# Function to replace variables in a file based on a properties file
+# Function to replace variables in a file based on a properties file.
+# This version is more robust and cross-platform by building and using a temporary
+# sed script file, which avoids issues with command line length limits and
+# differences in `sed -i` syntax.
 # Usage: replace_variables <file_path> <properties_file>
 replace_variables() {
   local file_path="$1"
@@ -29,42 +32,28 @@ replace_variables() {
     props["$key"]="$value"
   done <"$properties_file"
 
-  # Create temporary files for processing
-  local temp_file_intermediate=$(mktemp)
-  local temp_file_final=$(mktemp)
+  # Create a temporary file to hold the sed script.
+  local sed_script=$(mktemp)
 
-  # --- Pass 1: Un-escape \${VAR_NAME} to ${VAR_NAME} ---
-  # This sed command replaces '\${' with '${' globally.
-  # It targets patterns like \${IMAGE_NAME_FULL}
-  sed 's/\\\${/\${/g' "$file_path" >"$temp_file_intermediate"
+  # Iterate through the properties and write a sed substitution command for each.
+  # We use a custom delimiter `|` to avoid conflicts with slashes in file paths.
+  for key in "${!props[@]}"; do
+    local value="${props[$key]}"
+    # Escape special characters in the value for sed
+    local escaped_value=$(echo "$value" | sed -e 's/[\/&|]/\\&/g')
+    # Write the substitution commands to the temporary script file
+    echo "s|\\\$${key}\\$|${escaped_value}|g" >> "$sed_script"
+    echo "s|\\\${\\\?$key}|${escaped_value}|g" >> "$sed_script"
+  done
 
-  # --- Pass 2: Replace \$variableName\$ with values from properties ---
-  # Read from the intermediate file and apply property replacements
-  while IFS= read -r line; do
-    local modified_line="$line"
+  # Use `sed -i` with the `-f` flag to apply the script from the temporary file.
+  # We use `sed -i` without an extension to perform in-place replacement on Linux systems.
+  # The `|| sed -i '' -f "$sed_script" "$file_path"` provides a fallback for macOS.
+  sed -i -f "$sed_script" "$file_path" || sed -i '' -f "$sed_script" "$file_path"
+  
+  # Clean up the temporary sed script file
+  rm "$sed_script"
 
-    # Create a temporary file for the current line's processing
-    local current_line_tmp=$(mktemp)
-    echo "$modified_line" >"$current_line_tmp"
-
-    # Iterate through keys (sorted by length to handle potential overlaps, e.g., 'name' before 'name_long')
-    for key in $(printf "%s\n" "${!props[@]}" | awk '{ print length, $0 }' | sort -rn | cut -d" " -f2-); do
-      local value="${props[$key]}"
-      # Escape slashes, ampersands, and the sed delimiter itself (here, '#') if it's part of the value
-      local escaped_value=$(echo "$value" | sed -e 's/#/\\#/g' -e 's/[\/&]/\\&/g')
-      # Use sed -i (in-place) on the temporary file for the line
-      # Using '#' as the delimiter for sed to avoid conflicts with '/' in paths/URLs
-      sed -i "s#\\\$${key}\\\$#${escaped_value}#g" "$current_line_tmp"
-      modified_line=$(cat "$current_line_tmp") # Read back the modified line
-    done
-    echo "$modified_line" >>"$temp_file_final"
-    rm "$current_line_tmp" # Clean up line temp file
-  done <"$temp_file_intermediate"
-
-  # Overwrite the original file with the modified content from the final temporary file
-  mv "$temp_file_final" "$file_path"
-  # Clean up intermediate temporary file
-  rm "$temp_file_intermediate"
   echo "Successfully replaced variables in '$file_path'"
 }
 
