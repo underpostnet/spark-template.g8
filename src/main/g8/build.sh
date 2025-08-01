@@ -18,6 +18,9 @@ underpost dockerfile-image-build --path \${PROJECT_DIR} --image-name=\${IMAGE_NA
 # This must be done before the SparkApplication is created.
 kubectl apply -f ./manifests/sparkapplication/spark-rbac.yaml
 
+kubectl delete sparkapplication spark-template
+kubectl delete sparkapplication spark-template-gpu-tests
+
 kubectl apply -f ./manifests/sparkapplication/spark-application.yaml
 kubectl apply -f ./manifests/sparkapplication/spark-test-runner-gpu.yaml
 kubectl get sparkapplication -w -o wide
