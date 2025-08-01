@@ -1,4 +1,4 @@
-PROJECT_DIR=/home/dd/spark-template.g8
+PROJECT_DIR=/home/dd/spark-template
 PROJECT_VERSION=0.0.11
 IMAGE_NAME=spark-template
 
