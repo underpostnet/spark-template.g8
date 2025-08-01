@@ -31,6 +31,8 @@ jobs:
           mv sbt-rpm.repo /etc/yum.repos.d/
           yum install -y sbt
 
+      - name: Install Java
+        run: dnf install -y java-17-openjdk-devel
 
       - name: Install Node.js
         run: |
@@ -64,4 +66,3 @@ jobs:
           git config user.email 'admin@underpost.net'
           underpost cmt . ci docker-image-spark-template 'Update spark-template repo package'
           underpost push . underpostnet/spark-template
-         
