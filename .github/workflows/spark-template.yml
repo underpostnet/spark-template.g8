@@ -64,7 +64,7 @@ jobs:
           underpost clone --bare underpostnet/spark-template-demo
           mkdir ./tmp
           cd ./tmp
-          underpost clone -g8 underpostnet/spark-template
+          git clone https://github.com/underpostnet/spark-template.g8
           cd ..
           mv ./spark-template-demo.git ./spark-template/.git
           mkdir -p ./spark-template/.github/workflows
