@@ -64,7 +64,7 @@ jobs:
           underpost clone --bare underpostnet/spark-template-demo
           mv ./spark-template-demo.git ./spark-template/.git
           cd ./spark-template
-          git remote set-url origin https://underpost:${GITHUB_TOKEN}@github.com/underpostnet/spark-template.git
+          git remote set-url origin https://underpost:${GITHUB_TOKEN}@github.com/underpostnet/spark-template-demo.git
           git init
           git add .
           git config user.name 'underpost.net'
